@@ -1,0 +1,185 @@
+:root {
+    --primary: #7B61FF;
+    --bg-gradient: linear-gradient(135deg, #1f1c2c, #28243f);
+    --text-light: #f5f5f5;
+    --nav-bg: rgba(20,20,30,0.9);
+    --card-bg: rgba(255,255,255,0.05);
+    --console-bg: #000;
+    --console-text: #0f0;
+    --success: #4CAF50;
+    --error: #F44336;
+    --inprogress: #FFC107;
+  }
+  
+  .deploy-page {
+    background: var(--bg-gradient);
+    color: var(--text-light);
+  }
+  
+  .deploy-page .filters,
+  .deploy-page .bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .deploy-page .filters input,
+  .deploy-page .filters select,
+  .deploy-page .bulk-actions select,
+  .deploy-page .bulk-actions button {
+    padding: 0.6rem 1rem;
+    border-radius: 1rem;
+    border: none;
+    background: var(--card-bg);
+    color: var(--text-light);
+    font-size: 0.95rem;
+  }
+  
+  .deploy-page .filters select {
+    min-width: 140px;
+  }
+  
+  .deploy-page .filters input {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .deploy-page .bulk-actions select {
+    min-width: 160px;
+  }
+  
+  .deploy-page .bulk-actions button {
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .deploy-page .bulk-actions button:hover {
+    background: #613ad4;
+  }
+  
+  .deploy-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  
+  .deploy-page th,
+  .deploy-page td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #444;
+  }
+  
+  .deploy-page th {
+    background: var(--card-bg);
+    color: var(--text-light);
+    cursor: pointer;
+  }
+  
+  .deploy-page tr:nth-child(even) {
+    background: rgba(255,255,255,0.05);
+  }
+  
+  .deploy-page tr:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .pagination button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 1rem;
+    background: var(--card-bg);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .pagination button:hover:not(:disabled) {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .pagination button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+  .logBtn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .logBtn:hover {
+    background: #613ad4;
+  }
+  
+  .progress-container {
+    background: #333;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    height: 0.75rem;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--inprogress);
+    transition: width 1s ease;
+  }
+  
+  /* Side panel logs */
+  #logPanel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 360px;
+    height: 100%;
+    background: var(--console-bg);
+    color: var(--console-text);
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    transition: right 0.3s ease;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #logPanel.open {
+    right: 0;
+  }
+  
+  #logPanel h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  #logPanel .closeBtn {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.2rem;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+  
+  #logOutput {
+    flex: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin-top: 0.5rem;
+  }
+  
