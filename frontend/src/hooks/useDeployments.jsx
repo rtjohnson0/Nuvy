@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchDeployments } from '../utils/api';
 
-/**
- * Custom hook to fetch, filter, and paginate deployment history
- */
 export function useDeployments() {
   const [allDeploys, setAllDeploys] = useState([]);
   const [deploys, setDeploys] = useState([]);
@@ -20,19 +17,43 @@ export function useDeployments() {
   }, []);
 
   const applyFilter = useCallback(() => {
-    let d = allDeploys;
+    let data = [...allDeploys];
+
     if (filter.term) {
-      const t = filter.term.toLowerCase();
-      d = d.filter(x => x.project.toLowerCase().includes(t));
+      const term = filter.term.toLowerCase();
+      data = data.filter(item => item.project.toLowerCase().includes(term));
     }
-    if (filter.status) d = d.filter(x => x.status === filter.status);
-    if (filter.date) d = d.filter(x => x.date === filter.date);
+
+    if (filter.status) {
+      data = data.filter(item => item.status === filter.status);
+    }
+
+    if (filter.date) {
+      data = data.filter(item => item.date.startsWith(filter.date));
+    }
 
     const start = (page - 1) * pageSize;
-    setDeploys(d.slice(start, start + pageSize));
+    setDeploys(data.slice(start, start + pageSize));
   }, [allDeploys, filter, page, pageSize]);
 
-  useEffect(() => { applyFilter(); }, [applyFilter]);
+  useEffect(() => {
+    applyFilter();
+  }, [applyFilter]);
 
-  return { deploys, page, setPage, pageSize, total: allDeploys.length, filter, setFilter };
+  return {
+    deploys,
+    page,
+    setPage,
+    pageSize,
+    total: allDeploys.filter(item => {
+      const termMatch = filter.term
+        ? item.project.toLowerCase().includes(filter.term.toLowerCase())
+        : true;
+      const statusMatch = filter.status ? item.status === filter.status : true;
+      const dateMatch = filter.date ? item.date.startsWith(filter.date) : true;
+      return termMatch && statusMatch && dateMatch;
+    }).length,
+    filter,
+    setFilter
+  };
 }

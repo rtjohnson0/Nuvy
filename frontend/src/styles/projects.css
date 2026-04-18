@@ -1,83 +1,135 @@
 .projects-page {
-    padding: var(--section-padding);
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  
-  .filter-bar {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    margin-bottom: 1.25rem;
-  }
-  .filter-bar input,
-  .filter-bar select {
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: var(--card-bg);
-    color: var(--text-light);
-    font-size: 0.9rem;
-  }
-  
-  .view-toggle {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  .view-toggle button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    background: var(--card-bg);
-    color: var(--text-light);
-    cursor: pointer;
-  }
-  .view-toggle button.active,
-  .view-toggle button:hover {
-    background: var(--primary);
-    color: #fff;
-  }
-  
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .project-card {
-    position: relative;
-    background: var(--card-bg);
-    padding: 0.75rem;
-    border-radius: 1rem;
-    text-align: center;
-  }
-  .project-thumb {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto 0.5rem;
-  }
-  .status {
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.5rem;
-    font-size: 0.75rem;
-  }
-  .status.Live { background: #4CAF50; }
-  .status.Deploying { background: #FFC107; }
-  .status.Error { background: #F44336; }
-  
-  .projects-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .projects-table th,
-  .projects-table td {
-    padding: 0.5rem;
-    border-bottom: 1px solid #444;
-    text-align: left;
-  }
-  .projects-table th {
-    cursor: pointer;
-    background: var(--card-bg);
-  }
+  padding: var(--section-padding);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filter-bar input,
+.filter-bar select {
+  padding: 0.75rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--card-bg);
+  color: var(--text-light);
+  font-size: 0.94rem;
+}
+
+body.light .filter-bar input,
+body.light .filter-bar select {
+  color: var(--light-text);
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.view-toggle button {
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.view-toggle button.active,
+.view-toggle button:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.project-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 1rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+.project-thumb {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.updated {
+  margin: 0.7rem 0 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.actions button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.62rem 0.9rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: var(--primary-dark);
+}
+
+.star-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(245, 245, 245, 0.45);
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+.star-btn.fav {
+  color: #ffd54f;
+}
+
+.projects-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.projects-table th,
+.projects-table td {
+  padding: 0.9rem 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+.projects-table th {
+  cursor: pointer;
+  background: var(--card-bg);
+}
+
+.projects-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useProjects } from '../hooks/useProjects';
-import '../styles/projects.css';
 
 export default function Projects() {
   const {
@@ -14,32 +13,38 @@ export default function Projects() {
     toggleFav,
     detail,
     openDetail,
-    closeDetail,
+    closeDetail
   } = useProjects();
 
   return (
-    <div className="projects-page container">
-      <div className="filter-bar">
+    <section className="projects-page">
+      <div className="dashboard-header">
+        <h1>Projects</h1>
         <input
           type="text"
-          placeholder="Search name/status…"
+          placeholder="Search projects"
           value={filter.term}
           onChange={e => setFilter({ term: e.target.value })}
         />
+      </div>
+
+      <div className="filter-bar">
         <select
           value={filter.status}
           onChange={e => setFilter({ status: e.target.value })}
         >
-          <option value="">All Statuses</option>
+          <option value="">All statuses</option>
           <option value="Live">Live</option>
           <option value="Deploying">Deploying</option>
           <option value="Error">Error</option>
         </select>
+
         <input
           type="date"
           value={filter.from}
           onChange={e => setFilter({ from: e.target.value })}
         />
+
         <input
           type="date"
           value={filter.to}
@@ -51,30 +56,36 @@ export default function Projects() {
         <button
           className={viewMode === 'cards' ? 'active' : ''}
           onClick={() => setViewMode('cards')}
-        >📦 Cards</button>
+        >
+          Cards
+        </button>
         <button
           className={viewMode === 'table' ? 'active' : ''}
           onClick={() => setViewMode('table')}
-        >📋 Table</button>
+        >
+          Table
+        </button>
       </div>
 
       {viewMode === 'cards' ? (
         <div className="projects-grid">
-          {projects.map(p => (
-            <div key={p.id} className="project-card">
+          {projects.map(project => (
+            <div key={project.id} className="project-card">
               <button
-                className={`star-btn ${favs.has(p.id) ? 'fav' : ''}`}
-                onClick={() => toggleFav(p.id)}
-              >{favs.has(p.id) ? '★' : '☆'}</button>
+                className={`star-btn ${favs.has(project.id) ? 'fav' : ''}`}
+                onClick={() => toggleFav(project.id)}
+                title="Favorite project"
+              >
+                ★
+              </button>
 
-              <div className="project-thumb">
-                {p.name.split(' ').map(w => w[0]).join('').toUpperCase()}
-              </div>
-              <h3>{p.name}</h3>
-              <span className={`status ${p.status}`}>{p.status}</span>
-              <p className="updated">Last updated {p.updated}</p>
+              <div className="project-thumb">{project.name.slice(0, 2).toUpperCase()}</div>
+              <h3>{project.name}</h3>
+              <div className={`status ${project.status}`}>{project.status}</div>
+              <div className="updated">Updated {project.updatedLabel}</div>
+
               <div className="actions">
-                <button onClick={() => openDetail(p)}>View</button>
+                <button onClick={() => openDetail(project)}>View Details</button>
               </div>
             </div>
           ))}
@@ -85,31 +96,47 @@ export default function Projects() {
             <tr>
               <th onClick={() => sortBy('name')}>Name</th>
               <th onClick={() => sortBy('status')}>Status</th>
-              <th onClick={() => sortBy('updated')}>Last Updated</th>
-              <th>Actions</th>
+              <th onClick={() => sortBy('updated')}>Updated</th>
+              <th>URL</th>
             </tr>
           </thead>
           <tbody>
-            {projects.map(p => (
-              <tr key={p.id} onClick={() => openDetail(p)}>
-                <td>{p.name}</td>
-                <td>{p.status}</td>
-                <td>{p.updated}</td>
-                <td><button>Details</button></td>
+            {projects.map(project => (
+              <tr key={project.id}>
+                <td>{project.name}</td>
+                <td>
+                  <span className={`status ${project.status}`}>{project.status}</span>
+                </td>
+                <td>{project.updatedLabel}</td>
+                <td>
+                  <a href={project.url} target="_blank" rel="noreferrer">
+                    Open
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      {detail && (
-        <aside className="detail-panel open">
-          <button className="closeBtn" onClick={closeDetail}>✕</button>
-          <h3>{detail.name}</h3>
-          <p><strong>Status:</strong> {detail.status}</p>
-          <p><strong>Last Updated:</strong> {detail.updated}</p>
-        </aside>
-      )}
-    </div>
+      <div className={`detail-panel ${detail ? 'open' : ''}`}>
+        {detail && (
+          <>
+            <button className="closeBtn" onClick={closeDetail}>✕</button>
+            <h2>{detail.name}</h2>
+            <p><strong>Status:</strong> {detail.status}</p>
+            <p><strong>Type:</strong> {detail.type}</p>
+            <p><strong>Updated:</strong> {detail.updatedLabel}</p>
+            <p><strong>Source:</strong> {detail.source}</p>
+            <p>
+              <strong>Live URL:</strong>{' '}
+              <a href={detail.url} target="_blank" rel="noreferrer">
+                {detail.url}
+              </a>
+            </p>
+          </>
+        )}
+      </div>
+    </section>
   );
 }

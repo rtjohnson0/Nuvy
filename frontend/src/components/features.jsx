@@ -3,18 +3,18 @@ import React, { useEffect, useRef } from 'react';
 const featureData = [
   {
     icon: '🚀',
-    title: 'Instant Deployments',
-    desc: 'See your site live in under 30 seconds with our preconfigured pipeline.'
+    title: 'Fast Deployments',
+    desc: 'Trigger deploys in seconds with a clean, platform-style flow.'
   },
   {
-    icon: '🎨',
-    title: 'Modern Interface',
-    desc: 'Enjoy a sleek dark-mode UI with intuitive icons and animations.'
+    icon: '📦',
+    title: 'ZIP or GitHub',
+    desc: 'Launch projects from a build artifact or a connected repository.'
   },
   {
-    icon: '⚙️',
-    title: 'Mock AWS Integration',
-    desc: 'Easily switch from simulated to real AWS services when you’re ready.'
+    icon: '📊',
+    title: 'Deployment Visibility',
+    desc: 'Track status, logs, and project health from one dashboard.'
   }
 ];
 
@@ -22,6 +22,8 @@ export default function Features() {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const features = containerRef.current.querySelectorAll('.feature');
     const observer = new IntersectionObserver(
       entries => {
@@ -32,11 +34,11 @@ export default function Features() {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.25 }
     );
+
     features.forEach(feature => observer.observe(feature));
 
-    // Cleanup
     return () => observer.disconnect();
   }, []);
 

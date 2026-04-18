@@ -1,53 +1,98 @@
 import React, { useState } from 'react';
-import { uploadZip, deployProject } from '../utils/api';
+import { createProjectAndDeploy } from '../utils/api';
 
 export default function DeployForm() {
   const [zipFile, setZipFile] = useState(null);
   const [fileName, setFileName] = useState('No file chosen');
-  const [zipError, setZipError] = useState('');
   const [repoURL, setRepoURL] = useState('');
-  const [repoError, setRepoError] = useState('');
+  const [siteType, setSiteType] = useState('react');
+  const [customDomain, setCustomDomain] = useState('');
+  const [projectName, setProjectName] = useState('');
   const [progress, setProgress] = useState(0);
   const [deploying, setDeploying] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleFileChange = e => {
     const file = e.target.files[0];
     if (file) {
       setZipFile(file);
       setFileName(file.name);
-      setZipError('');
+      setError('');
     }
+  };
+
+  const resetMessages = () => {
+    setError('');
+    setSuccess('');
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    let valid = true;
-    setZipError('');
-    setRepoError('');
+    resetMessages();
 
-    if (!zipFile) { setZipError('Please upload a ZIP file.'); valid = false; }
-    if (!repoURL) { setRepoError('Repository URL is required.'); valid = false; }
-    if (!valid) return;
+    const hasZip = !!zipFile;
+    const hasRepo = repoURL.trim().length > 0;
+
+    if (!projectName.trim()) {
+      setError('Project name is required.');
+      return;
+    }
+
+    if (!hasZip && !hasRepo) {
+      setError('Upload a ZIP file or enter a GitHub repository URL.');
+      return;
+    }
+
+    if (hasZip && hasRepo) {
+      setError('Choose either a ZIP file or a GitHub repository, not both.');
+      return;
+    }
 
     setDeploying(true);
+
     try {
-      setProgress(10);
-      const projectId = await uploadZip(zipFile);
-      setProgress(50);
-      const result = await deployProject(projectId);
+      setProgress(15);
+
+      const result = await createProjectAndDeploy({
+        name: projectName.trim(),
+        siteType,
+        customDomain: customDomain.trim(),
+        zipFile,
+        repoURL: repoURL.trim()
+      });
+
       setProgress(100);
-      alert('✅ Deployment simulated!\n' + result.log);
+      setSuccess(`Deployment created for ${result.project.name}. Live URL: ${result.deployment.url}`);
+      setProjectName('');
+      setRepoURL('');
+      setCustomDomain('');
+      setZipFile(null);
+      setFileName('No file chosen');
     } catch (err) {
-      alert(`❌ ${err.message}`);
+      setError(err.message || 'Something went wrong while deploying.');
     } finally {
-      setTimeout(() => setProgress(0), 500);
+      setTimeout(() => setProgress(0), 700);
       setDeploying(false);
     }
   };
 
   return (
-    <div className="form-card">
+    <div className="form-card" id="deploy-form">
+      <div className="section-head">
+        <h2>Launch a new project</h2>
+        <p>Deploy a static site or React build through Nuvy.</p>
+      </div>
+
       <form className="form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Project Name"
+          value={projectName}
+          onChange={e => setProjectName(e.target.value)}
+          disabled={deploying}
+        />
+
         <label htmlFor="zipUpload" className="upload-label">
           📁 Drag & Drop or Click to Upload ZIP
         </label>
@@ -56,22 +101,31 @@ export default function DeployForm() {
           name="zip"
           type="file"
           accept=".zip"
-          style={{ display: 'none' }}
           onChange={handleFileChange}
         />
+
         <div className="file-name">{fileName}</div>
-        {zipError && <div className="error-msg">{zipError}</div>}
+
+        <div className="or-divider">
+          <span>OR</span>
+        </div>
 
         <input
           type="text"
           placeholder="GitHub Repository URL"
           value={repoURL}
-          onChange={e => { setRepoURL(e.target.value); setRepoError(''); }}
+          onChange={e => {
+            setRepoURL(e.target.value);
+            setError('');
+          }}
+          disabled={deploying || !!zipFile}
         />
-        {repoError && <div className="error-msg">{repoError}</div>}
 
-        <select disabled={deploying} defaultValue="">
-          <option value="" disabled>Select site type (optional)</option>
+        <select
+          disabled={deploying}
+          value={siteType}
+          onChange={e => setSiteType(e.target.value)}
+        >
           <option value="static">Static</option>
           <option value="react">React</option>
         </select>
@@ -79,8 +133,13 @@ export default function DeployForm() {
         <input
           type="text"
           placeholder="Custom Domain (optional)"
+          value={customDomain}
+          onChange={e => setCustomDomain(e.target.value)}
           disabled={deploying}
         />
+
+        {error && <div className="error-msg">{error}</div>}
+        {success && <div className="success-msg">{success}</div>}
 
         <button type="submit" className="btn" disabled={deploying}>
           {deploying ? 'Deploying…' : 'Deploy Now'}

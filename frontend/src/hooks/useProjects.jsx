@@ -1,26 +1,41 @@
 import { useState, useCallback, useEffect } from 'react';
+import { fetchProjects } from '../utils/api';
 
-export function useProjects(initialData = []) {
-  const [allProjects] = useState(initialData);
-  const [projects, setProjects] = useState(initialData);
+export function useProjects() {
+  const [allProjects, setAllProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [filter, setFilterState] = useState({ term: '', status: '', from: '', to: '' });
   const [sortKey, setSortKey] = useState(null);
   const [sortDir, setSortDir] = useState(1);
   const [viewMode, setViewMode] = useState('cards');
-  const [favs, setFavs] = useState(new Set(JSON.parse(localStorage.getItem('nuvyFavs') || '[]')));
+  const [favs, setFavs] = useState(
+    new Set(JSON.parse(localStorage.getItem('nuvyFavs') || '[]'))
+  );
   const [detail, setDetail] = useState(null);
+
+  useEffect(() => {
+    async function load() {
+      const data = await fetchProjects();
+      setAllProjects(data);
+    }
+    load();
+  }, []);
 
   const filterProjects = useCallback(() => {
     const { term, status, from, to } = filter;
-    let data = allProjects.filter(p => {
+    let data = [...allProjects].filter(project => {
       let ok = true;
+
       if (term) {
-        ok = p.name.toLowerCase().includes(term.toLowerCase())
-          || p.status.toLowerCase().includes(term.toLowerCase());
+        ok =
+          project.name.toLowerCase().includes(term.toLowerCase()) ||
+          project.status.toLowerCase().includes(term.toLowerCase());
       }
-      if (status) ok = ok && p.status === status;
-      if (from)   ok = ok && new Date(p.updated) >= new Date(from);
-      if (to)     ok = ok && new Date(p.updated) <= new Date(to);
+
+      if (status) ok = ok && project.status === status;
+      if (from) ok = ok && new Date(project.updated) >= new Date(from);
+      if (to) ok = ok && new Date(project.updated) <= new Date(to);
+
       return ok;
     });
 
@@ -32,16 +47,14 @@ export function useProjects(initialData = []) {
       });
     }
 
-    // favorites first
     data.sort((a, b) => (favs.has(b.id) ? 1 : 0) - (favs.has(a.id) ? 1 : 0));
 
     setProjects(data);
   }, [allProjects, filter, sortKey, sortDir, favs]);
 
-  // run on mount and whenever filter/sort/favs change
   useEffect(() => {
     filterProjects();
-  }, [filter, filterProjects]);
+  }, [filterProjects]);
 
   const setFilter = updates => {
     setFilterState(prev => ({ ...prev, ...updates }));
@@ -49,7 +62,7 @@ export function useProjects(initialData = []) {
 
   const sortBy = key => {
     setSortKey(key);
-    setSortDir(prev => -prev);
+    setSortDir(prev => (sortKey === key ? -prev : 1));
   };
 
   const toggleFav = id => {
@@ -76,6 +89,6 @@ export function useProjects(initialData = []) {
     toggleFav,
     detail,
     openDetail,
-    closeDetail,
+    closeDetail
   };
 }

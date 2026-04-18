@@ -5,6 +5,9 @@ import Home from './pages/home';
 import Projects from './pages/projects';
 // import Docs from './pages/Docs';
 import Deployments from './pages/deployments';
+import './styles/styles.css';
+import './styles/projects.css';
+import './styles/deployments.css';
 
 export default function App() {
   return (
