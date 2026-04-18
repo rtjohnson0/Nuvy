@@ -53,6 +53,7 @@ export default function DeployForm() {
         </label>
         <input
           id="zipUpload"
+          name="zip"
           type="file"
           accept=".zip"
           style={{ display: 'none' }}
