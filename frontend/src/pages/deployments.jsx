@@ -3,7 +3,17 @@ import { useDeployments } from '../hooks/useDeployments';
 import { getDeploymentLog } from '../utils/api';
 
 export default function Deployments() {
-  const { deploys, page, setPage, pageSize, total, filter, setFilter } = useDeployments();
+  const {
+    deploys,
+    page,
+    setPage,
+    pageSize,
+    total,
+    filter,
+    setFilter,
+    loading
+  } = useDeployments();
+
   const [logPanelOpen, setLogPanelOpen] = useState(false);
   const [logTitle, setLogTitle] = useState('');
   const [logOutput, setLogOutput] = useState('');
@@ -17,6 +27,10 @@ export default function Deployments() {
     setLogTitle(`${deploy.project} · ${deploy.id}`);
     setLogOutput(logs.join('\n'));
     setLogPanelOpen(true);
+  };
+
+  const closeLogs = () => {
+    setLogPanelOpen(false);
   };
 
   return (
@@ -59,44 +73,52 @@ export default function Deployments() {
         />
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>URL</th>
-            <th>Logs</th>
-          </tr>
-        </thead>
-        <tbody>
-          {deploys.map(deploy => (
-            <tr key={deploy.id}>
-              <td>{deploy.project}</td>
-              <td>
-                <span className={`status ${deploy.status}`}>{deploy.status}</span>
-              </td>
-              <td>{deploy.dateLabel}</td>
-              <td>
-                <a href={deploy.url} target="_blank" rel="noreferrer">
-                  Open
-                </a>
-              </td>
-              <td>
-                <button className="logBtn" onClick={() => openLogs(deploy)}>
-                  View Logs
-                </button>
-              </td>
-            </tr>
-          ))}
-
-          {!deploys.length && (
+      {loading ? (
+        <div className="empty-state">
+          <h3>Loading deployments...</h3>
+        </div>
+      ) : !deploys.length ? (
+        <div className="empty-state">
+          <h3>No deployments yet</h3>
+          <p>Your deployment history will show up here once you launch a project.</p>
+        </div>
+      ) : (
+        <table>
+          <thead>
             <tr>
-              <td colSpan="5">No deployments found.</td>
+              <th>Project</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>URL</th>
+              <th>Logs</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {deploys.map(deploy => (
+              <tr key={deploy.id}>
+                <td>{deploy.project}</td>
+                <td>
+                  <span className={`status ${deploy.status}`}>{deploy.status}</span>
+                </td>
+                <td>{deploy.dateLabel}</td>
+                <td>
+                  <button
+                    className="openSiteBtn"
+                    onClick={() => window.open(deploy.url, '_blank', 'noopener,noreferrer')}
+                  >
+                    Open Site ↗
+                  </button>
+                </td>
+                <td>
+                  <button className="logBtn" onClick={() => openLogs(deploy)}>
+                    View Logs
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <div className="pagination">
         <button onClick={() => setPage(prev => prev - 1)} disabled={page <= 1}>
@@ -110,9 +132,20 @@ export default function Deployments() {
         </button>
       </div>
 
+      {logPanelOpen && <div className="logOverlay" onClick={closeLogs} />}
+
       <div id="logPanel" className={logPanelOpen ? 'open' : ''}>
-        <button className="closeBtn" onClick={() => setLogPanelOpen(false)}>✕</button>
-        <h2>{logTitle || 'Deployment Logs'}</h2>
+        <div className="logPanelHeader">
+          <div>
+            <h2>Deployment Logs</h2>
+            <div className="logPanelSubtext">{logTitle}</div>
+          </div>
+
+          <button className="logCloseBtn" onClick={closeLogs} aria-label="Close logs panel">
+            ✕
+          </button>
+        </div>
+
         <div id="logOutput">{logOutput}</div>
       </div>
     </section>

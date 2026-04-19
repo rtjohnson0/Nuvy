@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify-Style Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="home-page">
+    <!-- Toggle Button for Sidebar (Top Left) -->
+    <button class="toggle-btn">
+        <i class="fas fa-bars"></i> <span>Menu</span>
+    </button>
+
+    <!-- First Sidebar (Left Sidebar) -->
+    <div class="sidebar">
+        <div class="logo">My Portfolio</div>
+        <ul>
+            <li><i class="fas fa-user"></i><span><a href="#about">About</a></span></li>
+            <li><i class="fas fa-tools"></i><span><a href="resume.html">Resume</a></span></li>
+            <li><i class="fas fa-briefcase"></i><span><a href="#projects">Projects</a></span></li>
+            <li><i class="fas fa-envelope"></i><span><a href="contact.html">Contact</a></span></li>
+        </ul>
+
+        <!-- Close Menu Button (Inside the Left Sidebar) -->
+        <button class="close-btn">
+            <i class="fas fa-times"></i> <span>Close Menu</span>
+        </button>
+    </div>
+    
+
+    <!-- Main Content Area -->
+    <div class="main">
+       <!-- Hero Section -->
+    <section class="hero-section">
+        <!-- Background with Dynamic Gradient -->
+        <div class="background"></div>
+        
+        <div class="hero-content">
+            <h1>Introducing My Latest Work: A Fully Automated Cloud Environment with Terraform!</h1>
+            <p>Explore my newest project where I’ve automated cloud provisioning using Terraform, bringing efficiency and scalability to cloud environments.</p>
+
+            <!-- Call to Action Button -->
+            <button>See My Work</button>
+        </div>
+    </section>
+
+        <!-- Most Recent Played Section -->
+       <!-- Most Recent Projects Section -->
+<section id="recent-played" class="home-section">
+    <h2>Most Recent Projects</h2>
+  
+    <div class="projects-gallery-compact">
+      <!-- Card 1 -->
+      <div class="project-item-compact">
+        <div class="project-cover-compact">
+          <img src="code.jpg" alt="Cloud Automation" />
+          <div class="overlay-compact">
+            <div class="overlay-content-compact">
+              <h3>Cloud Automation</h3>
+              <p>Terraform & AWS</p>
+              <a href="#" class="see-more-overlay-btn">See More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Card 2 -->
+      <div class="project-item-compact">
+        <div class="project-cover-compact">
+          <img src="code.jpg" alt="CI/CD Pipelines" />
+          <div class="overlay-compact">
+            <div class="overlay-content-compact">
+              <h3>CI/CD Pipelines</h3>
+              <p>Kubernetes &amp; Jenkins</p>
+              <a href="#" class="see-more-overlay-btn">See More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- Card 2 -->
+      <div class="project-item-compact">
+        <div class="project-cover-compact">
+          <img src="code.jpg" alt="CI/CD Pipelines" />
+          <div class="overlay-compact">
+            <div class="overlay-content-compact">
+              <h3>CI/CD Pipelines</h3>
+              <p>Kubernetes &amp; Jenkins</p>
+              <a href="#" class="see-more-overlay-btn">See More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  
+
+        <!-- Skills Section -->
+      <!-- In the Skills section -->
+<section id="skills">
+    <h1>Skills</h1>
+    <div class="skill-list">
+      <div class="skill-item">
+        <i class="fab fa-golang"></i>
+        <h2>Golang</h2>
+        <p>Proficient in building scalable backend systems.</p>
+      </div>
+      <div class="skill-item">
+        <i class="fas fa-code"></i>
+        <h2>Terraform</h2>
+        <p>Expert in infrastructure automation.</p>
+      </div>
+      <div class="skill-item">
+        <i class="fab fa-aws"></i>
+        <h2>AWS</h2>
+        <p>Certified in designing cloud solutions.</p>
+      </div>
+      <div class="skill-item">
+        <i class="fas fa-layer-group"></i>
+        <h2>Kubernetes</h2>
+        <p>Experienced with container orchestration.</p>
+      </div>
+    </div>
+  </section>
+  
+
+        <section id="contact">
+            <h1>Contact Me</h1>
+            <p>Interested in working together? Reach out to me!</p>
+            <a href="mailto:your-email@example.com" class="contact-btn">Send an Email</a>
+        </section>
+    </div>
+
+    <div class="second-sidebar">
+        <!-- Now Playing Section (Cleaned up with image and text below) -->
+        <div class="now-playing">
+            <img src="profilePicture.jpeg" alt="Your Image" class="profile-image">
+            <div class="now-playing-text">
+                <h3>Reggie Johnson Jr</h3>
+                <p>Platform Engineer</p>
+            </div>
+        </div>
+
+        <!-- Artist Info Section -->
+        <div class="artist-info">
+            <img src="weddingPhoto.jpg" alt="Your photo" class="artist-image">
+            <h4>Reggie Johnson Jr</h4>
+            <div class="listeners">Engineering Experience: 5 years</div>
+            <div class="bio">
+                Bio: 👋 Originally from Washington, DC, I've been living in Charlotte, NC, for the past six years. I'm a passionate engineer with a strong focus on cloud computing, data engineering, and automation.
+            </div>
+            <button class="follow-btn">Follow</button>
+        </div>
+
+
+        <!-- Next in Queue Section -->
+        <div class="next-in-queue-container">
+            <div class="next-in-queue">
+                <h5>Next in Queue</h5>
+                <p>Learning Kubernetes Management with AWS</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <!-- Left Side: Sidebar Content -->
+        <div class="footer-left">
+
+        </div>
+
+        <!-- Center: Media Player Controls -->
+        <div class="footer-center">
+            <div class="media-player-controls">
+                <button class="control-btn" id="prev-btn"><i class="fas fa-backward"></i></button>
+                <button class="control-btn" id="play-pause-btn"><i class="fas fa-play"></i></button>
+                <button class="control-btn" id="next-btn"><i class="fas fa-forward"></i></button>
+            </div>
+        </div>
+
+        <!-- Right Side: Social Links and Volume Control -->
+        <div class="footer-right">
+            <div class="social-links">
+                <a href="https://github.com" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com" target="_blank" class="social-icon"><i
+                        class="fab fa-linkedin"></i></a>
+            </div>
+            <div class="volume-controls">
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+                <span id="volume-value">50</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

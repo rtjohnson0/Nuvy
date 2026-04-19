@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Projects</title>
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="project-body">
+  <!-- Top Nav -->
+  <nav class="project-nav">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="#">My Projects</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Resume</a></li>
+        <li><a href="#" class="active">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <div class="project-content">
+    <!-- Hero Section (Two Columns) -->
+    <section class="hero-section">
+      <!-- LEFT: Now Playing Card -->
+      <div class="left-col">
+        <div class="now-playing-card">
+          <h3>Now Playing</h3>
+
+          <!-- Cover -->
+          <div class="now-playing-cover">
+            <img src="code.jpg" alt="Current Project Cover" />
+          </div>
+
+          <!-- Info -->
+          <div class="now-playing-info">
+            <h4>A Project Title</h4>
+            <p>Deep Learning with Python &amp; TensorFlow</p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-container">
+            <div class="progress-bar"></div>
+          </div>
+
+          <!-- Time Display -->
+          <div class="time-display">
+            <span class="elapsed">0:00</span> / <span class="duration">3:45</span>
+          </div>
+
+          <!-- Player Controls (Shuffle, Like, Pause, Next) -->
+          <div class="player-controls">
+            <button id="shuffleBtn"><i class="fas fa-random"></i></button>
+            <button id="likeBtn"><i class="fas fa-heart"></i></button>
+            <button id="pauseBtn"><i class="fas fa-pause"></i></button>
+            <button id="nextBtn"><i class="fas fa-forward"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Title + Search + 2x2 Albums + Additional Info -->
+      <div class="right-col">
+        <div class="hero-text">
+          <h1>Play Your Beloved Projects</h1>
+          <p>
+            Explore my curated engineering “albums” in DevOps, AI, and more—
+            completely free and open-source.
+          </p>
+        </div>
+
+        <!-- Simple search bar for filtering projects by tag or name -->
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search by technology..." />
+        </div>
+
+        <!-- 2x2 Album Grid -->
+        <div class="albums-grid" id="albumsGrid">
+          <!-- Album 1 -->
+          <div class="album-square" data-tags="jenkins aws ci cd" data-title="CI/CD Pipelines">
+            <img src="code.jpg" alt="Project 1" />
+            <div class="overlay">
+              <div class="overlay-content">
+                <h3>CI/CD Pipelines</h3>
+                <div class="tags">
+                  <span class="tag">Jenkins</span>
+                  <span class="tag">AWS</span>
+                </div>
+                <div class="demo-links">
+                  <a href="#" class="demo-btn">Live Demo</a>
+                  <a href="#" class="repo-btn">Source Code</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Album 2 -->
+          <div class="album-square" data-tags="python sql data" data-title="Data Engineering">
+            <img src="code.jpg" alt="Project 2" />
+            <div class="overlay">
+              <div class="overlay-content">
+                <h3>Data Engineering</h3>
+                <div class="tags">
+                  <span class="tag">Python</span>
+                  <span class="tag">SQL</span>
+                </div>
+                <div class="demo-links">
+                  <a href="#" class="demo-btn">Live Demo</a>
+                  <a href="#" class="repo-btn">Source Code</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Album 3 -->
+          <div class="album-square" data-tags="react node e-commerce" data-title="E-Commerce Site">
+            <img src="code.jpg" alt="Project 3" />
+            <div class="overlay">
+              <div class="overlay-content">
+                <h3>E-Commerce Site</h3>
+                <div class="tags">
+                  <span class="tag">React</span>
+                  <span class="tag">Node.js</span>
+                </div>
+                <div class="demo-links">
+                  <a href="#" class="demo-btn">Live Demo</a>
+                  <a href="#" class="repo-btn">Source Code</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Album 4 -->
+          <div class="album-square" data-tags="terraform aws cloud" data-title="Cloud Automation">
+            <img src="code.jpg" alt="Project 4" />
+            <div class="overlay">
+              <div class="overlay-content">
+                <h3>Cloud Automation</h3>
+                <div class="tags">
+                  <span class="tag">Terraform</span>
+                  <span class="tag">AWS</span>
+                </div>
+                <div class="demo-links">
+                  <a href="#" class="demo-btn">Live Demo</a>
+                  <a href="#" class="repo-btn">Source Code</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional info block at the bottom -->
+        <div class="playlist-notes">
+          <h2>About This Playlist</h2>
+          <p>
+            Each “album” highlights a different project in my portfolio.
+            Shuffle or pick one to explore a live demo or source code.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Me</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body class="contact-page">
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="index.html">My Portfolio</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Contact Container -->
+  <div class="contact-container">
+    <!-- Left Panel: Contact Form -->
+    <div class="contact-content">
+      <h1>Contact Me</h1>
+      <p>I’d love to hear from you. Drop a message below!</p>
+      <form action="#" method="post" class="contact-form">
+        <div class="form-group">
+          <label for="name"><i class="fas fa-user"></i> Name</label>
+          <input type="text" id="name" name="name" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <label for="email"><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="email" name="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+          <label for="message"><i class="fas fa-comment"></i> Message</label>
+          <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="contact-btn">Send Message</button>
+      </form>
+    </div>
+  
+    <!-- Right Panel: Contact Info -->
+    <div class="contact-info">
+      <h2>Let's Connect</h2>
+      <ul>
+        <li><i class="fas fa-map-marker-alt"></i> Charlotte, NC</li>
+        <li><i class="fas fa-envelope"></i>
+          <a href="mailto:reggiejohnson1997@gmail.com">reggiejohnson1997@gmail.com</a>
+        </li>
+        <li><i class="fab fa-github"></i>
+          <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+        </li>
+        <li><i class="fab fa-linkedin"></i>
+          <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

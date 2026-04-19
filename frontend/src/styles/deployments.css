@@ -82,7 +82,8 @@ body.light .deploy-page .filters select {
   cursor: default;
 }
 
-.logBtn {
+.logBtn,
+.openSiteBtn {
   background: var(--primary);
   color: #fff;
   border: none;
@@ -91,15 +92,23 @@ body.light .deploy-page .filters select {
   cursor: pointer;
 }
 
-.logBtn:hover {
+.logBtn:hover,
+.openSiteBtn:hover {
   background: var(--primary-dark);
+}
+
+.logOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 199;
 }
 
 #logPanel {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 380px;
+  width: 420px;
   max-width: 95vw;
   height: 100%;
   background: #07070d;
@@ -112,32 +121,58 @@ body.light .deploy-page .filters select {
   display: flex;
   flex-direction: column;
   border-left: 1px solid rgba(255,255,255,0.08);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.35);
 }
 
 #logPanel.open {
   right: 0;
 }
 
-#logPanel h2 {
-  margin-bottom: 0.5rem;
+.logPanelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.logPanelHeader h2 {
+  margin: 0;
   font-size: 1rem;
   color: #ffffff;
 }
 
-#logPanel .closeBtn {
-  background: none;
-  border: none;
+.logPanelSubtext {
+  margin-top: 0.35rem;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.logCloseBtn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
   color: #fff;
-  font-size: 1.2rem;
-  align-self: flex-end;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.logCloseBtn:hover {
+  background: rgba(255,255,255,0.14);
 }
 
 #logOutput {
   flex: 1;
   overflow-y: auto;
   white-space: pre-wrap;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   line-height: 1.8;
+  padding-right: 0.25rem;
 }

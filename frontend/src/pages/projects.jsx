@@ -13,7 +13,8 @@ export default function Projects() {
     toggleFav,
     detail,
     openDetail,
-    closeDetail
+    closeDetail,
+    loading
   } = useProjects();
 
   return (
@@ -67,7 +68,16 @@ export default function Projects() {
         </button>
       </div>
 
-      {viewMode === 'cards' ? (
+      {loading ? (
+        <div className="empty-state">
+          <h3>Loading projects...</h3>
+        </div>
+      ) : !projects.length ? (
+        <div className="empty-state">
+          <h3>No projects yet</h3>
+          <p>Deploy your first project through Nuvy to see it here.</p>
+        </div>
+      ) : viewMode === 'cards' ? (
         <div className="projects-grid">
           {projects.map(project => (
             <div key={project.id} className="project-card">
@@ -83,9 +93,16 @@ export default function Projects() {
               <h3>{project.name}</h3>
               <div className={`status ${project.status}`}>{project.status}</div>
               <div className="updated">Updated {project.updatedLabel}</div>
+              <div className="deployment-count">{project.deploymentCount} deployments</div>
 
-              <div className="actions">
+              <div className="actions actions-stack">
                 <button onClick={() => openDetail(project)}>View Details</button>
+                <button
+                  className="secondary-btn"
+                  onClick={() => window.open(project.url, '_blank', 'noopener,noreferrer')}
+                >
+                  Open Site
+                </button>
               </div>
             </div>
           ))}
@@ -97,6 +114,7 @@ export default function Projects() {
               <th onClick={() => sortBy('name')}>Name</th>
               <th onClick={() => sortBy('status')}>Status</th>
               <th onClick={() => sortBy('updated')}>Updated</th>
+              <th>Deployments</th>
               <th>URL</th>
             </tr>
           </thead>
@@ -108,6 +126,7 @@ export default function Projects() {
                   <span className={`status ${project.status}`}>{project.status}</span>
                 </td>
                 <td>{project.updatedLabel}</td>
+                <td>{project.deploymentCount}</td>
                 <td>
                   <a href={project.url} target="_blank" rel="noreferrer">
                     Open
@@ -128,6 +147,7 @@ export default function Projects() {
             <p><strong>Type:</strong> {detail.type}</p>
             <p><strong>Updated:</strong> {detail.updatedLabel}</p>
             <p><strong>Source:</strong> {detail.source}</p>
+            <p><strong>Deployments:</strong> {detail.deploymentCount}</p>
             <p>
               <strong>Live URL:</strong>{' '}
               <a href={detail.url} target="_blank" rel="noreferrer">

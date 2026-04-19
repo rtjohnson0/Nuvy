@@ -7,14 +7,28 @@ export function useDeployments() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [filter, setFilter] = useState({ term: '', status: '', date: '' });
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function load() {
+  const loadDeployments = useCallback(async () => {
+    try {
       const data = await fetchDeployments();
       setAllDeploys(data);
+    } catch (error) {
+      console.error('Failed to load deployments:', error);
+    } finally {
+      setLoading(false);
     }
-    load();
   }, []);
+
+  useEffect(() => {
+    loadDeployments();
+
+    const interval = setInterval(() => {
+      loadDeployments();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [loadDeployments]);
 
   const applyFilter = useCallback(() => {
     let data = [...allDeploys];
@@ -40,20 +54,24 @@ export function useDeployments() {
     applyFilter();
   }, [applyFilter]);
 
+  const filteredTotal = allDeploys.filter(item => {
+    const termMatch = filter.term
+      ? item.project.toLowerCase().includes(filter.term.toLowerCase())
+      : true;
+    const statusMatch = filter.status ? item.status === filter.status : true;
+    const dateMatch = filter.date ? item.date.startsWith(filter.date) : true;
+    return termMatch && statusMatch && dateMatch;
+  }).length;
+
   return {
     deploys,
     page,
     setPage,
     pageSize,
-    total: allDeploys.filter(item => {
-      const termMatch = filter.term
-        ? item.project.toLowerCase().includes(filter.term.toLowerCase())
-        : true;
-      const statusMatch = filter.status ? item.status === filter.status : true;
-      const dateMatch = filter.date ? item.date.startsWith(filter.date) : true;
-      return termMatch && statusMatch && dateMatch;
-    }).length,
+    total: filteredTotal,
     filter,
-    setFilter
+    setFilter,
+    loading,
+    refreshDeployments: loadDeployments
   };
 }

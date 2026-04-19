@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Resume</title>
+
+  <!-- Link to your single stylesheet that contains both home & resume styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Font Awesome Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+</head>
+<body class="resume-page">
+
+  <!-- Navigation Bar -->
+  <nav class="resume-nav">
+    <div class="nav-container">
+      <!-- Left side: Logo/Title -->
+      <div class="nav-logo">
+        <a href="resume.html">My Resume</a>
+      </div>
+
+      <!-- Right side: Nav Links -->
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Resume Container -->
+  <div class="resume-container">
+    <!-- LEFT COLUMN: Personal Info -->
+    <div class="resume-left">
+        <h1>Reggie Johnson Jr</h1>
+        <h2>Platform Engineer / AWS / Data Engineering / Terraform</h2>
+        
+        <ul class="resume-contact">
+          <li><i class="fas fa-map-marker-alt"></i> Charlotte, NC</li>
+          <li><i class="fas fa-envelope"></i> reggiejohnson1997@gmail.com</li>
+        </ul>
+        
+        <p class="resume-summary">
+          As a dedicated software engineer, I excel in architecting and managing AWS 
+          infrastructure, leading initiatives such as developing a Terraform provider 
+          in Golang to streamline resource creation and version control.
+        </p>
+        <p class="resume-summary">
+          My passion lies in DevOps automation and cloud technologies. I’m committed 
+          to delivering robust, scalable solutions while continually learning and 
+          mentoring junior developers.
+        </p>
+        
+        <a href="ReginaldResume.pdf" class="download-resume" download>
+          Download Resume
+        </a>
+      </div>
+      
+
+    <!-- CENTER COLUMN: Work Experience -->
+    <div class="resume-center">
+      <h2>Work Experience</h2>
+
+      <div class="experience-card">
+        <h3>Associate Platform Engineer<br>Red Ventures (June 2023 - Current)</h3>
+        <ul>
+          <li>Led creation and management of AWS & Terraform infrastructure for 5+ partnerships.</li>
+          <li>Developed Golang scripts to streamline repos and optimize AWS resource usage.</li>
+          <li>Created a Terraform provider in Golang for efficient AWS provisioning via custom CI/CD.</li>
+          <li>Migrated from CircleCI to GitHub Actions, reducing costs and enhancing security.</li>
+          <li>Mentored junior engineers on coding standards and DevOps best practices.</li>
+        </ul>
+      </div>
+
+      <div class="experience-card">
+        <h3>Associate Software Engineer<br>Red Ventures (May 2022 - June 2023)</h3>
+        <ul>
+          <li>Managed on-call responsibilities, ensuring rapid resolution of critical issues.</li>
+          <li>Enhanced front-end development using React, Cohesion, and Preamp frameworks.</li>
+          <li>Acted as a backend engineer with .NET, AWS, and Terraform for scalable systems.</li>
+          <li>Implemented Slack-integrated traffic allocation, boosting revenue by 20%.</li>
+        </ul>
+      </div>
+
+      <div class="experience-card">
+        <h3>Technical Instructor<br>Road to Hire (Jan 2020 - June 2022)</h3>
+        <ul>
+          <li>Taught over 150 aspiring software engineers, placing many at major companies.</li>
+          <li>Developed a comprehensive curriculum focusing on coding fundamentals and real-world apps.</li>
+          <li>Taught in multiple Charlotte high schools, guiding students toward higher education in CS.</li>
+        </ul>
+      </div>
+
+      <div class="experience-card">
+        <h3>Junior Software Developer<br>Road to Hire (May 2019 - Dec 2019)</h3>
+        <ul>
+          <li>Developed multiple e-commerce sites with robust, user-friendly interfaces.</li>
+          <li>Contributed to the "Lifehoops" non-profit website, showcasing community involvement.</li>
+          <li>Built full-stack applications using Node.js, MySQL, React.js, and agile best practices.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Skills, Education, Certs -->
+    <div class="resume-right">
+      <!-- Skills Section -->
+      <div class="skills-section">
+        <h2>Technical Skills</h2>
+        <ul class="skills-list">
+          <li><i class="fas fa-cube"></i> Golang</li>
+          <li><i class="fas fa-cloud"></i> AWS</li>
+          <li><i class="fas fa-tools"></i> Terraform</li>
+          <li><i class="fas fa-network-wired"></i> REST APIs</li>
+          <li><i class="fas fa-database"></i> SQL</li>
+          <li><i class="fas fa-table"></i> NoSQL</li>
+          <li><i class="fab fa-windows"></i> .NET</li>
+          <li><i class="fab fa-docker"></i> Docker</li>
+          <li><i class="fab fa-react"></i> React</li>
+          <li><i class="fab fa-js-square"></i> JavaScript</li>
+        </ul>
+      </div>
+
+      <!-- Education Section -->
+      <div class="education-section">
+        <h2>Education</h2>
+        <h3>Electrical Engineering</h3>
+        <p>Frostburg State University, Frostburg, MD (Dec 2018)</p>
+      </div>
+
+      <!-- Certification Section -->
+      <div class="certification-section" style="background-color: #292929; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <h2 style="color: #1db954; text-align: center; margin-bottom: 15px; font-size: 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Certifications</h2>
+        <ul style="list-style: none; margin: 0; padding: 0; color: #ccc;">
+          <li style="margin-bottom: 10px;">
+            <i class="fas fa-certificate" style="color: #1db954; margin-right: 8px;"></i>
+            AWS Certified Solutions Architect – Associate (2024)
+          </li>
+          <!-- Add more certs if needed -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script for Intersection Observer, etc. -->
+  <script src="script.js"></script>
+</body>
+</html>

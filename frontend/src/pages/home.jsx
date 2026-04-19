@@ -6,14 +6,20 @@ import DeployForm from '../components/deployForm';
 export default function Home() {
   const scrollToForm = () => {
     const el = document.getElementById('deploy-form');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleDeploymentCreated = () => {
+    window.dispatchEvent(new Event('nuvy:deployment-created'));
   };
 
   return (
     <>
       <Hero onGetStarted={scrollToForm} />
       <Features />
-      <DeployForm />
+      <DeployForm onDeploymentCreated={handleDeploymentCreated} />
     </>
   );
 }

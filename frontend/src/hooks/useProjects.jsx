@@ -12,24 +12,40 @@ export function useProjects() {
     new Set(JSON.parse(localStorage.getItem('nuvyFavs') || '[]'))
   );
   const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function load() {
+  const loadProjects = useCallback(async () => {
+    try {
       const data = await fetchProjects();
       setAllProjects(data);
+    } catch (error) {
+      console.error('Failed to load projects:', error);
+    } finally {
+      setLoading(false);
     }
-    load();
   }, []);
+
+  useEffect(() => {
+    loadProjects();
+
+    const interval = setInterval(() => {
+      loadProjects();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [loadProjects]);
 
   const filterProjects = useCallback(() => {
     const { term, status, from, to } = filter;
+
     let data = [...allProjects].filter(project => {
       let ok = true;
 
       if (term) {
         ok =
           project.name.toLowerCase().includes(term.toLowerCase()) ||
-          project.status.toLowerCase().includes(term.toLowerCase());
+          project.status.toLowerCase().includes(term.toLowerCase()) ||
+          project.type.toLowerCase().includes(term.toLowerCase());
       }
 
       if (status) ok = ok && project.status === status;
@@ -50,7 +66,14 @@ export function useProjects() {
     data.sort((a, b) => (favs.has(b.id) ? 1 : 0) - (favs.has(a.id) ? 1 : 0));
 
     setProjects(data);
-  }, [allProjects, filter, sortKey, sortDir, favs]);
+
+    if (detail) {
+      const updatedDetail = data.find(project => project.id === detail.id);
+      if (updatedDetail) {
+        setDetail(updatedDetail);
+      }
+    }
+  }, [allProjects, filter, sortKey, sortDir, favs, detail]);
 
   useEffect(() => {
     filterProjects();
@@ -89,6 +112,8 @@ export function useProjects() {
     toggleFav,
     detail,
     openDetail,
-    closeDetail
+    closeDetail,
+    loading,
+    refreshProjects: loadProjects
   };
 }

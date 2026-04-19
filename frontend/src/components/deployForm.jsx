@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createProjectAndDeploy } from '../utils/api';
 
-export default function DeployForm() {
+export default function DeployForm({ onDeploymentCreated }) {
   const [zipFile, setZipFile] = useState(null);
   const [fileName, setFileName] = useState('No file chosen');
   const [repoURL, setRepoURL] = useState('');
@@ -63,12 +63,20 @@ export default function DeployForm() {
       });
 
       setProgress(100);
-      setSuccess(`Deployment created for ${result.project.name}. Live URL: ${result.deployment.url}`);
+      setSuccess(
+        `Deployment created for ${result.project.name}. Initial status: ${result.deployment.status}. Live URL: ${result.deployment.url}`
+      );
+
+      if (onDeploymentCreated) {
+        onDeploymentCreated(result);
+      }
+
       setProjectName('');
       setRepoURL('');
       setCustomDomain('');
       setZipFile(null);
       setFileName('No file chosen');
+      setSiteType('react');
     } catch (err) {
       setError(err.message || 'Something went wrong while deploying.');
     } finally {
@@ -96,6 +104,7 @@ export default function DeployForm() {
         <label htmlFor="zipUpload" className="upload-label">
           📁 Drag & Drop or Click to Upload ZIP
         </label>
+
         <input
           id="zipUpload"
           name="zip"
@@ -142,7 +151,7 @@ export default function DeployForm() {
         {success && <div className="success-msg">{success}</div>}
 
         <button type="submit" className="btn" disabled={deploying}>
-          {deploying ? 'Deploying…' : 'Deploy Now'}
+          {deploying ? 'Creating Deployment…' : 'Deploy Now'}
         </button>
 
         <div className="progress" style={{ opacity: progress ? 1 : 0 }}>
