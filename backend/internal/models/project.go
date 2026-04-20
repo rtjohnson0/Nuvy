@@ -10,4 +10,8 @@ type Project struct {
 	Updated         string `json:"updated"`
 	UpdatedLabel    string `json:"updatedLabel"`
 	DeploymentCount int    `json:"deploymentCount"`
+
+	UploadedFile   string `json:"uploadedFile,omitempty"`
+	DeployRootPath string `json:"deployRootPath,omitempty"`
+	LatestLogLine  string `json:"latestLogLine,omitempty"`
 }

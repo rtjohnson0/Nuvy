@@ -71,12 +71,33 @@ body.light .nav {
   gap: 0.5rem;
 }
 
-.logo-icon {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, #7b61ff, #9d8cff);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(123, 97, 255, 0.35);
+
+.logo-image {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.logo-link:hover .logo-image {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 16px rgba(124, 58, 237, 0.7));
+}
+
+.logo-image {
+  transition: all 0.2s ease;
 }
 
 .nav-links {

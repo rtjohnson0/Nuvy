@@ -2,6 +2,12 @@
   color: var(--text-light);
 }
 
+.autoRefreshText {
+  margin-top: 0.35rem;
+  color: rgba(255,255,255,0.62);
+  font-size: 0.9rem;
+}
+
 .deploy-page .filters,
 .deploy-page .bulk-actions {
   display: flex;
@@ -28,7 +34,7 @@ body.light .deploy-page .filters select {
 }
 
 .deploy-page .filters select {
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .deploy-page .filters input {
@@ -55,6 +61,10 @@ body.light .deploy-page .filters select {
 
 .deploy-page tr:nth-child(even) {
   background: rgba(255,255,255,0.03);
+}
+
+.deploy-page tr:hover {
+  background: rgba(255,255,255,0.06);
 }
 
 .pagination {
@@ -152,6 +162,10 @@ body.light .deploy-page .filters select {
   word-break: break-word;
 }
 
+.logStatusRow {
+  margin-top: 0.6rem;
+}
+
 .logCloseBtn {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
@@ -175,4 +189,60 @@ body.light .deploy-page .filters select {
   margin-top: 0.25rem;
   line-height: 1.8;
   padding-right: 0.25rem;
+}
+
+/* status pills */
+.status {
+  display: inline-flex;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status.Live {
+  background: #4CAF50;
+}
+
+.status.Error {
+  background: #F44336;
+}
+
+.status.Queued {
+  background: #64748b;
+}
+
+.status.Uploading {
+  background: #0ea5e9;
+}
+
+.status.Extracting {
+  background: #8b5cf6;
+}
+
+.status.Validating {
+  background: #06b6d4;
+}
+
+.status.Preparing {
+  background: #6366f1;
+}
+
+.status.Uploading-to-S3 {
+  background: #f59e0b;
+  color: #1a1a1a;
+}
+
+.status.Cloning {
+  background: #3b82f6;
+}
+
+.status.Building {
+  background: #a855f7;
+}
+
+.status.Deploying {
+  background: #FFC107;
+  color: #1a1a1a;
 }

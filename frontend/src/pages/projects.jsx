@@ -35,8 +35,16 @@ export default function Projects() {
           onChange={e => setFilter({ status: e.target.value })}
         >
           <option value="">All statuses</option>
-          <option value="Live">Live</option>
+          <option value="Queued">Queued</option>
+          <option value="Uploading">Uploading</option>
+          <option value="Extracting">Extracting</option>
+          <option value="Validating">Validating</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Uploading to S3">Uploading to S3</option>
+          <option value="Cloning">Cloning</option>
+          <option value="Building">Building</option>
           <option value="Deploying">Deploying</option>
+          <option value="Live">Live</option>
           <option value="Error">Error</option>
         </select>
 
@@ -91,9 +99,13 @@ export default function Projects() {
 
               <div className="project-thumb">{project.name.slice(0, 2).toUpperCase()}</div>
               <h3>{project.name}</h3>
-              <div className={`status ${project.status}`}>{project.status}</div>
+              <div className={`status ${statusClassName(project.status)}`}>{project.status}</div>
               <div className="updated">Updated {project.updatedLabel}</div>
               <div className="deployment-count">{project.deploymentCount} deployments</div>
+
+              {project.latestLogLine && (
+                <div className="latest-log-preview">{project.latestLogLine}</div>
+              )}
 
               <div className="actions actions-stack">
                 <button onClick={() => openDetail(project)}>View Details</button>
@@ -123,7 +135,7 @@ export default function Projects() {
               <tr key={project.id}>
                 <td>{project.name}</td>
                 <td>
-                  <span className={`status ${project.status}`}>{project.status}</span>
+                  <span className={`status ${statusClassName(project.status)}`}>{project.status}</span>
                 </td>
                 <td>{project.updatedLabel}</td>
                 <td>{project.deploymentCount}</td>
@@ -143,11 +155,24 @@ export default function Projects() {
           <>
             <button className="closeBtn" onClick={closeDetail}>✕</button>
             <h2>{detail.name}</h2>
-            <p><strong>Status:</strong> {detail.status}</p>
+            <p><strong>Status:</strong> <span className={`status ${statusClassName(detail.status)}`}>{detail.status}</span></p>
             <p><strong>Type:</strong> {detail.type}</p>
-            <p><strong>Updated:</strong> {detail.updatedLabel}</p>
             <p><strong>Source:</strong> {detail.source}</p>
+            <p><strong>Updated:</strong> {detail.updatedLabel}</p>
             <p><strong>Deployments:</strong> {detail.deploymentCount}</p>
+
+            {detail.uploadedFile && (
+              <p><strong>Uploaded File:</strong> {detail.uploadedFile}</p>
+            )}
+
+            {detail.deployRootPath && (
+              <p><strong>Deploy Root:</strong> <span className="mono-text">{detail.deployRootPath}</span></p>
+            )}
+
+            {detail.latestLogLine && (
+              <p><strong>Latest Event:</strong> <span className="mono-text">{detail.latestLogLine}</span></p>
+            )}
+
             <p>
               <strong>Live URL:</strong>{' '}
               <a href={detail.url} target="_blank" rel="noreferrer">
@@ -159,4 +184,10 @@ export default function Projects() {
       </div>
     </section>
   );
+}
+
+function statusClassName(status) {
+  return String(status || '')
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '');
 }

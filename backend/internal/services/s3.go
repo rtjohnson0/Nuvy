@@ -87,7 +87,7 @@ func (s *S3Service) UploadDirectory(ctx context.Context, localRoot, projectSlug 
 		return "", err
 	}
 
-	url := fmt.Sprintf("http://%s.s3-website-%s.amazonaws.com/projects/%s/index.html", s.Bucket, s.Region, projectSlug)
+	url := fmt.Sprintf("http://%s.s3-website-%s.amazonaws.com/projects/%s/", s.Bucket, s.Region, projectSlug)
 	return url, nil
 }
 

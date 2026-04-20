@@ -133,3 +133,19 @@ body.light .filter-bar select {
 .projects-table tr:nth-child(even) {
   background: rgba(255,255,255,0.03);
 }
+
+.latest-log-preview {
+  margin: 0.7rem 0 0.9rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  min-height: 48px;
+}
+
+.mono-text {
+  font-family: monospace;
+  word-break: break-word;
+}

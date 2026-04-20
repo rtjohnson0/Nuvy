@@ -10,8 +10,14 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <div className="logo">
-        <div className="logo-icon" />
-        <Link to="/" onClick={closeMenu}>Nuvy</Link>
+        <Link to="/" onClick={closeMenu} className="logo-link">
+          <img
+            src="/images/nuvy-logo.png"
+            alt="Nuvy logo"
+            className="logo-image"
+          />
+          <span className="logo-text">Nuvy</span>
+        </Link>
       </div>
 
       <button

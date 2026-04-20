@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDeployments } from '../hooks/useDeployments';
 import { getDeploymentLog } from '../utils/api';
 
@@ -15,28 +15,64 @@ export default function Deployments() {
   } = useDeployments();
 
   const [logPanelOpen, setLogPanelOpen] = useState(false);
+  const [selectedDeployment, setSelectedDeployment] = useState(null);
   const [logTitle, setLogTitle] = useState('');
   const [logOutput, setLogOutput] = useState('');
+  const [logStatus, setLogStatus] = useState('');
 
   const totalPages = useMemo(() => {
     return Math.max(1, Math.ceil(total / pageSize));
   }, [total, pageSize]);
 
   const openLogs = async deploy => {
-    const logs = await getDeploymentLog(deploy.id);
+    setSelectedDeployment(deploy);
     setLogTitle(`${deploy.project} · ${deploy.id}`);
-    setLogOutput(logs.join('\n'));
     setLogPanelOpen(true);
+
+    try {
+      const data = await getDeploymentLog(deploy.id);
+      setLogOutput((data.logs || []).join('\n'));
+      setLogStatus(data.status || deploy.status);
+    } catch (err) {
+      setLogOutput('Failed to load logs.');
+      setLogStatus('Error');
+    }
   };
 
   const closeLogs = () => {
     setLogPanelOpen(false);
+    setSelectedDeployment(null);
+    setLogTitle('');
+    setLogOutput('');
+    setLogStatus('');
   };
+
+  useEffect(() => {
+    if (!logPanelOpen || !selectedDeployment) return;
+
+    const poll = async () => {
+      try {
+        const data = await getDeploymentLog(selectedDeployment.id);
+        setLogOutput((data.logs || []).join('\n'));
+        setLogStatus(data.status || '');
+      } catch {
+        // ignore polling errors for now
+      }
+    };
+
+    poll();
+    const interval = setInterval(poll, 2000);
+
+    return () => clearInterval(interval);
+  }, [logPanelOpen, selectedDeployment]);
 
   return (
     <section className="dashboard deploy-page">
       <div className="dashboard-header">
-        <h1>Deployments</h1>
+        <div>
+          <h1>Deployments</h1>
+          <div className="autoRefreshText">Auto-refreshing deployment data</div>
+        </div>
       </div>
 
       <div className="filters">
@@ -58,8 +94,16 @@ export default function Deployments() {
           }}
         >
           <option value="">All statuses</option>
-          <option value="Live">Live</option>
+          <option value="Queued">Queued</option>
+          <option value="Uploading">Uploading</option>
+          <option value="Extracting">Extracting</option>
+          <option value="Validating">Validating</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Uploading to S3">Uploading to S3</option>
+          <option value="Cloning">Cloning</option>
+          <option value="Building">Building</option>
           <option value="Deploying">Deploying</option>
+          <option value="Live">Live</option>
           <option value="Error">Error</option>
         </select>
 
@@ -98,7 +142,7 @@ export default function Deployments() {
               <tr key={deploy.id}>
                 <td>{deploy.project}</td>
                 <td>
-                  <span className={`status ${deploy.status}`}>{deploy.status}</span>
+                  <span className={`status ${statusClassName(deploy.status)}`}>{deploy.status}</span>
                 </td>
                 <td>{deploy.dateLabel}</td>
                 <td>
@@ -139,6 +183,11 @@ export default function Deployments() {
           <div>
             <h2>Deployment Logs</h2>
             <div className="logPanelSubtext">{logTitle}</div>
+            {logStatus && (
+              <div className="logStatusRow">
+                <span className={`status ${statusClassName(logStatus)}`}>{logStatus}</span>
+              </div>
+            )}
           </div>
 
           <button className="logCloseBtn" onClick={closeLogs} aria-label="Close logs panel">
@@ -150,4 +199,10 @@ export default function Deployments() {
       </div>
     </section>
   );
+}
+
+function statusClassName(status) {
+  return String(status || '')
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '');
 }

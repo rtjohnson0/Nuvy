@@ -31,8 +31,7 @@ export async function getDeploymentLog(deploymentId) {
   const res = await fetch(`${API_BASE}/deployments/${deploymentId}/logs`);
   if (!res.ok) throw new Error('Failed to fetch deployment logs');
 
-  const data = await res.json();
-  return data.logs || [];
+  return res.json();
 }
 
 export async function createProjectAndDeploy({

@@ -37,10 +37,12 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:          "Live",
 			Type:            "React",
 			Source:          "ZIP Upload",
-			URL:             "https://nuvy.app/p/finepoint-landing",
+			URL:             "http://example.com/projects/finepoint-landing/",
 			Updated:         now1.Format(time.RFC3339),
 			UpdatedLabel:    now1.Format("Jan 2, 2006 3:04 PM"),
 			DeploymentCount: 1,
+			UploadedFile:    "finepoint-landing.zip",
+			LatestLogLine:   "Deployment successful.",
 		},
 		{
 			ID:              "proj_2",
@@ -48,10 +50,11 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:          "Deploying",
 			Type:            "Static",
 			Source:          "GitHub Repo",
-			URL:             "https://nuvy.app/p/nuvy-marketing",
+			URL:             "http://example.com/projects/nuvy-marketing/",
 			Updated:         now2.Format(time.RFC3339),
 			UpdatedLabel:    now2.Format("Jan 2, 2006 3:04 PM"),
 			DeploymentCount: 1,
+			LatestLogLine:   "Cloning repository...",
 		},
 		{
 			ID:              "proj_3",
@@ -59,10 +62,12 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:          "Error",
 			Type:            "React",
 			Source:          "ZIP Upload",
-			URL:             "https://nuvy.app/p/portfolio-v3",
+			URL:             "http://example.com/projects/portfolio-v3/",
 			Updated:         now3.Format(time.RFC3339),
 			UpdatedLabel:    now3.Format("Jan 2, 2006 3:04 PM"),
 			DeploymentCount: 1,
+			UploadedFile:    "portfolio-v3.zip",
+			LatestLogLine:   "Validation failed: no deployable index.html found.",
 		},
 	}
 
@@ -74,15 +79,15 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:       "Live",
 			Date:         now1.Format(time.RFC3339),
 			DateLabel:    now1.Format("Jan 2, 2006 3:04 PM"),
-			URL:          "https://nuvy.app/p/finepoint-landing",
+			URL:          "http://example.com/projects/finepoint-landing/",
 			UploadedFile: "finepoint-landing.zip",
 			Logs: []string{
-				"Uploading artifact...",
+				"Deployment initialized.",
+				"ZIP uploaded successfully.",
 				"ZIP extracted successfully.",
 				"Deploy root detected.",
-				"Validating project...",
-				"Building assets...",
-				"Deploying to static host...",
+				"Uploading files to S3...",
+				"Live URL: http://example.com/projects/finepoint-landing/",
 				"Deployment successful.",
 			},
 		},
@@ -93,11 +98,11 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:    "Deploying",
 			Date:      now2.Format(time.RFC3339),
 			DateLabel: now2.Format("Jan 2, 2006 3:04 PM"),
-			URL:       "https://nuvy.app/p/nuvy-marketing",
+			URL:       "http://example.com/projects/nuvy-marketing/",
 			RepoURL:   "https://github.com/example/nuvy-marketing",
 			Logs: []string{
-				"Fetching repository...",
-				"Preparing deployment environment...",
+				"Deployment initialized.",
+				"Cloning repository...",
 			},
 		},
 		{
@@ -107,10 +112,11 @@ func NewStore(s3Service *services.S3Service) *Store {
 			Status:       "Error",
 			Date:         now3.Format(time.RFC3339),
 			DateLabel:    now3.Format("Jan 2, 2006 3:04 PM"),
-			URL:          "https://nuvy.app/p/portfolio-v3",
+			URL:          "http://example.com/projects/portfolio-v3/",
 			UploadedFile: "portfolio-v3.zip",
 			Logs: []string{
-				"Uploading artifact...",
+				"Deployment initialized.",
+				"ZIP uploaded successfully.",
 				"ZIP extracted successfully.",
 				"Validation failed: no deployable index.html found.",
 			},
@@ -165,15 +171,18 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 
 	source := "GitHub Repo"
 	projectType := "React"
+	initialStatus := "Queued"
+
 	if strings.ToLower(siteType) == "static" {
 		projectType = "Static"
 	}
 	if hasZip {
 		source = "ZIP Upload"
+		initialStatus = "Uploading"
 	}
 
 	now := time.Now()
-	url := fmt.Sprintf("https://nuvy.app/p/%s", slugify(name))
+	url := fmt.Sprintf("http://placeholder.local/projects/%s/", slugify(name))
 	if customDomain != "" {
 		url = fmt.Sprintf("https://%s", customDomain)
 	}
@@ -181,26 +190,29 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 	project := models.Project{
 		ID:              projectID,
 		Name:            name,
-		Status:          "Deploying",
+		Status:          initialStatus,
 		Type:            projectType,
 		Source:          source,
 		URL:             url,
 		Updated:         now.Format(time.RFC3339),
 		UpdatedLabel:    now.Format("Jan 2, 2006 3:04 PM"),
 		DeploymentCount: 1,
+		LatestLogLine:   "Deployment initialized.",
 	}
 
 	deployment := models.Deployment{
 		ID:        deploymentID,
 		ProjectID: projectID,
 		Project:   name,
-		Status:    "Deploying",
+		Status:    initialStatus,
 		Date:      now.Format(time.RFC3339),
 		DateLabel: now.Format("Jan 2, 2006 3:04 PM"),
 		URL:       url,
 		RepoURL:   repoURL,
 		Logs:      []string{"Deployment initialized."},
 	}
+
+	var uploadedZipPath string
 
 	if hasZip {
 		defer file.Close()
@@ -215,6 +227,7 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 			writeError(w, http.StatusInternalServerError, "failed to save uploaded file")
 			return
 		}
+		uploadedZipPath = zipPath
 
 		extractDir := filepath.Join("tmp", "extracted", deploymentID)
 		if err := unzipArchive(zipPath, extractDir); err != nil {
@@ -222,8 +235,12 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
+		// cleanup uploaded zip right after successful extraction
+		_ = os.Remove(zipPath)
+
 		deployRoot, err := findDeployableRoot(extractDir)
 		if err != nil {
+			_ = os.RemoveAll(extractDir)
 			writeError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -236,6 +253,10 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 			"ZIP extracted successfully.",
 			"Deploy root detected: "+deployRoot,
 		)
+
+		project.UploadedFile = zipName
+		project.DeployRootPath = deployRoot
+		project.LatestLogLine = "Deploy root detected: " + deployRoot
 	}
 
 	s.mu.Lock()
@@ -243,7 +264,7 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 	s.Deployments = append([]models.Deployment{deployment}, s.Deployments...)
 	s.mu.Unlock()
 
-	go s.simulateDeployment(deploymentID, projectID, source)
+	go s.simulateDeployment(deploymentID, projectID, source, uploadedZipPath)
 
 	resp := models.CreateDeploymentResponse{
 		Project:    project,
@@ -251,6 +272,78 @@ func (s *Store) CreateProjectDeployment(w http.ResponseWriter, r *http.Request) 
 	}
 
 	writeJSON(w, http.StatusCreated, resp)
+}
+
+func (s *Store) GetDeployments(w http.ResponseWriter, r *http.Request) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	writeJSON(w, http.StatusOK, s.Deployments)
+}
+
+func (s *Store) GetDeploymentLogs(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(r.URL.Path, "/api/deployments/")
+	if path == "" {
+		writeError(w, http.StatusBadRequest, "deployment id is required")
+		return
+	}
+
+	parts := strings.Split(path, "/")
+	if len(parts) != 2 || parts[1] != "logs" {
+		writeError(w, http.StatusNotFound, "not found")
+		return
+	}
+
+	deploymentID := parts[0]
+
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	for _, deployment := range s.Deployments {
+		if deployment.ID == deploymentID {
+			writeJSON(w, http.StatusOK, map[string]any{
+				"logs":   deployment.Logs,
+				"status": deployment.Status,
+			})
+			return
+		}
+	}
+
+	writeError(w, http.StatusNotFound, "deployment not found")
+}
+
+func (s *Store) setDeploymentStatus(deploymentID, projectID, status string) {
+	now := time.Now()
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for i := range s.Deployments {
+		if s.Deployments[i].ID == deploymentID {
+			s.Deployments[i].Status = status
+			s.Deployments[i].Date = now.Format(time.RFC3339)
+			s.Deployments[i].DateLabel = now.Format("Jan 2, 2006 3:04 PM")
+			if len(s.Deployments[i].Logs) > 0 {
+				latest := s.Deployments[i].Logs[len(s.Deployments[i].Logs)-1]
+				for j := range s.Projects {
+					if s.Projects[j].ID == projectID {
+						s.Projects[j].LatestLogLine = latest
+						break
+					}
+				}
+			}
+			break
+		}
+	}
+
+	for i := range s.Projects {
+		if s.Projects[i].ID == projectID {
+			s.Projects[i].Status = status
+			s.Projects[i].Updated = now.Format(time.RFC3339)
+			s.Projects[i].UpdatedLabel = now.Format("Jan 2, 2006 3:04 PM")
+			break
+		}
+	}
 }
 
 func saveUploadedFile(file multipart.File, header *multipart.FileHeader) (string, string, error) {
@@ -336,13 +429,11 @@ func unzipArchive(zipPath, destDir string) error {
 }
 
 func findDeployableRoot(extractDir string) (string, error) {
-	// 1. Root-level index.html
 	rootIndex := filepath.Join(extractDir, "index.html")
 	if fileExists(rootIndex) {
 		return extractDir, nil
 	}
 
-	// 2. Common build folders
 	commonDirs := []string{
 		filepath.Join(extractDir, "build"),
 		filepath.Join(extractDir, "dist"),
@@ -354,7 +445,6 @@ func findDeployableRoot(extractDir string) (string, error) {
 		}
 	}
 
-	// 3. Single nested folder case
 	entries, err := os.ReadDir(extractDir)
 	if err == nil && len(entries) == 1 && entries[0].IsDir() {
 		nestedRoot := filepath.Join(extractDir, entries[0].Name())
@@ -371,7 +461,6 @@ func findDeployableRoot(extractDir string) (string, error) {
 		}
 	}
 
-	// 4. Last-resort recursive search
 	found, err := findIndexHTMLRecursively(extractDir, 4)
 	if err == nil && found != "" {
 		return filepath.Dir(found), nil
@@ -429,21 +518,44 @@ func sanitizeFilename(name string) string {
 	return name
 }
 
-func (s *Store) simulateDeployment(deploymentID, projectID, source string) {
+func (s *Store) appendLog(deploymentID, projectID, message string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for i := range s.Deployments {
+		if s.Deployments[i].ID == deploymentID {
+			s.Deployments[i].Logs = append(s.Deployments[i].Logs, message)
+			break
+		}
+	}
+
+	for i := range s.Projects {
+		if s.Projects[i].ID == projectID {
+			s.Projects[i].LatestLogLine = message
+			break
+		}
+	}
+}
+
+func (s *Store) simulateDeployment(deploymentID, projectID, source, uploadedZipPath string) {
 	var deployRoot string
 	var projectName string
+	var extractedPath string
 
 	s.mu.RLock()
 	for _, d := range s.Deployments {
 		if d.ID == deploymentID {
 			deployRoot = d.DeployRootPath
 			projectName = d.Project
+			extractedPath = d.ExtractedPath
 			break
 		}
 	}
 	s.mu.RUnlock()
 
 	var steps []string
+	var statuses []string
+
 	if source == "GitHub Repo" {
 		steps = []string{
 			"Cloning repository...",
@@ -451,25 +563,29 @@ func (s *Store) simulateDeployment(deploymentID, projectID, source string) {
 			"Building production bundle...",
 			"Deploying assets to static host...",
 		}
+		statuses = []string{
+			"Cloning",
+			"Building",
+			"Building",
+			"Deploying",
+		}
 	} else {
 		steps = []string{
 			"Validating project...",
 			"Preparing static bundle...",
 			"Uploading files to S3...",
 		}
+		statuses = []string{
+			"Validating",
+			"Preparing",
+			"Uploading to S3",
+		}
 	}
 
-	for _, step := range steps {
+	for i, step := range steps {
 		time.Sleep(1200 * time.Millisecond)
-
-		s.mu.Lock()
-		for i := range s.Deployments {
-			if s.Deployments[i].ID == deploymentID {
-				s.Deployments[i].Logs = append(s.Deployments[i].Logs, step)
-				break
-			}
-		}
-		s.mu.Unlock()
+		s.setDeploymentStatus(deploymentID, projectID, statuses[i])
+		s.appendLog(deploymentID, projectID, step)
 	}
 
 	finalURL := ""
@@ -502,8 +618,16 @@ func (s *Store) simulateDeployment(deploymentID, projectID, source string) {
 				s.Projects[i].Status = "Error"
 				s.Projects[i].Updated = now.Format(time.RFC3339)
 				s.Projects[i].UpdatedLabel = now.Format("Jan 2, 2006 3:04 PM")
+				s.Projects[i].LatestLogLine = "S3 upload failed: " + uploadErr.Error()
 				break
 			}
+		}
+
+		if extractedPath != "" {
+			_ = os.RemoveAll(extractedPath)
+		}
+		if uploadedZipPath != "" {
+			_ = os.Remove(uploadedZipPath)
 		}
 		return
 	}
@@ -529,9 +653,18 @@ func (s *Store) simulateDeployment(deploymentID, projectID, source string) {
 			s.Projects[i].UpdatedLabel = now.Format("Jan 2, 2006 3:04 PM")
 			if finalURL != "" {
 				s.Projects[i].URL = finalURL
+				s.Projects[i].LatestLogLine = "Deployment successful."
 			}
 			break
 		}
+	}
+
+	// cleanup after successful S3 upload
+	if extractedPath != "" {
+		_ = os.RemoveAll(extractedPath)
+	}
+	if uploadedZipPath != "" {
+		_ = os.Remove(uploadedZipPath)
 	}
 }
 
