@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"nuvy-backend/internal/handlers"
@@ -59,15 +60,25 @@ func main() {
 
 	handler := corsMiddleware(mux)
 
-	log.Println("Nuvy backend running on http://localhost:8080")
-	if err := http.ListenAndServe(":8080", handler); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Nuvy backend running on port %s", port)
+	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		allowedOrigin := os.Getenv("FRONTEND_URL")
+		if allowedOrigin == "" {
+			allowedOrigin = "http://localhost:3000"
+		}
+
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
