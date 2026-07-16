@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Nuvy/static/css/main.43c6d621.css",
+    "main.js": "/Nuvy/static/js/main.062c3abd.js",
+    "static/js/453.eda72a5b.chunk.js": "/Nuvy/static/js/453.eda72a5b.chunk.js",
+    "index.html": "/Nuvy/index.html",
+    "main.43c6d621.css.map": "/Nuvy/static/css/main.43c6d621.css.map",
+    "main.062c3abd.js.map": "/Nuvy/static/js/main.062c3abd.js.map",
+    "453.eda72a5b.chunk.js.map": "/Nuvy/static/js/453.eda72a5b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.43c6d621.css",
+    "static/js/main.062c3abd.js"
+  ]
+}
