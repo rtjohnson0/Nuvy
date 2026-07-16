@@ -13,12 +13,13 @@ import (
 func main() {
 	_ = godotenv.Load()
 
-	s3Service, err := services.NewS3Service()
+	ghService, err := services.NewGitHubService()
 	if err != nil {
-		log.Fatalf("failed to initialize s3 service: %v", err)
+		log.Fatalf("failed to initialize GitHub service: %v\n"+
+			"Set GITHUB_TOKEN and GITHUB_USERNAME in your .env file.", err)
 	}
 
-	store := handlers.NewStore(s3Service)
+	store := handlers.NewStore(ghService)
 
 	mux := http.NewServeMux()
 
@@ -65,7 +66,7 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("Nuvy backend running on port %s", port)
+	log.Printf("Nuvy backend running on :%s", port)
 	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		log.Fatal(err)
 	}

@@ -6,7 +6,7 @@ function formatDate(dateString) {
 }
 
 export async function fetchProjects() {
-  const res = await fetch(`${API_BASE}/projects`);
+  const res = await fetch(`${API_BASE}/api/projects`);
   if (!res.ok) throw new Error('Failed to fetch projects');
 
   const data = await res.json();
@@ -17,7 +17,7 @@ export async function fetchProjects() {
 }
 
 export async function fetchDeployments() {
-  const res = await fetch(`${API_BASE}/deployments`);
+  const res = await fetch(`${API_BASE}/api/deployments`);
   if (!res.ok) throw new Error('Failed to fetch deployments');
 
   const data = await res.json();
@@ -28,7 +28,7 @@ export async function fetchDeployments() {
 }
 
 export async function getDeploymentLog(deploymentId) {
-  const res = await fetch(`${API_BASE}/deployments/${deploymentId}/logs`);
+  const res = await fetch(`${API_BASE}/api/deployments/${deploymentId}/logs`);
   if (!res.ok) throw new Error('Failed to fetch deployment logs');
 
   return res.json();
@@ -51,7 +51,7 @@ export async function createProjectAndDeploy({
     formData.append('zipFile', zipFile);
   }
 
-  const res = await fetch(`${API_BASE}/projects/deploy`, {
+  const res = await fetch(`${API_BASE}/api/projects/deploy`, {
     method: 'POST',
     body: formData
   });
